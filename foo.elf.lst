@@ -1,6 +1,4 @@
-
 foo.elf:     file format elf32-littlearm
-
 
 Disassembly of section .banana:
 
@@ -15,14 +13,42 @@ Disassembly of section .banana:
 .align 1
 .type reset_handler, %function
 reset_handler:
-    mov r1, #0x1      // 16-bit (2-byte) Thumb encoding
- 198:	2101      	movs	r1, #1
-    mov r2, #0x2      // (2-byte) instuction
- 19a:	2202      	movs	r2, #2
+    mov r1, #7      // 16-bit (2-byte) Thumb encoding
+ 198:	2107      	movs	r1, #7
+    mov r2, #3      // (2-byte) instuction
+ 19a:	2203      	movs	r2, #3
+    
     add r3, r1, r2    // (2-byte) instuction
  19c:	188b      	adds	r3, r1, r2
+
+    b piyush
+ 19e:	e001      	b.n	1a4 <piyush>
+
+000001a0 <piyush2>:
+
+piyush2:
+    sub r4, r1, r2
+ 1a0:	1a8c      	subs	r4, r1, r2
+
+    b end
+ 1a2:	e002      	b.n	1aa <end>
+
+000001a4 <piyush>:
+
+piyush:
+    mov r5, r3
+ 1a4:	1c1d      	adds	r5, r3, #0
+
+    lsl r6, r5, #2
+ 1a6:	00ae      	lsls	r6, r5, #2
+    b piyush2
+ 1a8:	e7fa      	b.n	1a0 <piyush2>
+
+000001aa <end>:
+
+end:
     bl .              // BL in Thumb is a 32-bit (4-byte) instruction.
- 19e:	f7ff fffe 	bl	19e <reset_handler+0x6>
+ 1aa:	f7ff fffe 	bl	1aa <end>
 
 Disassembly of section .ARM.attributes:
 
@@ -41,7 +67,7 @@ Disassembly of section .ARM.attributes:
 Disassembly of section .debug_line:
 
 00000000 <.debug_line>:
-   0:	00000031 	andeq	r0, r0, r1, lsr r0
+   0:	00000037 	andeq	r0, r0, r7, lsr r0
    4:	00190002 	andseq	r0, r9, r2
    8:	01020000 	mrseq	r0, (UNDEF: 2)
    c:	000a0efb 	strdeq	r0, [sl], -fp
@@ -51,10 +77,11 @@ Disassembly of section .debug_line:
   1c:	0000532e 	andeq	r5, r0, lr, lsr #6
   20:	00000000 	andeq	r0, r0, r0
   24:	01980205 	orrseq	r0, r8, r5, lsl #4
-  28:	0a030000 	beq	c0030 <reset_handler+0xbfe98>
-  2c:	1e1e1e01 	cdpne	14, 1, cr1, cr14, cr1, {0}
-  30:	01000202 	tsteq	r0, r2, lsl #4
-  34:	Address 0x34 is out of bounds.
+  28:	0a030000 	beq	c0030 <end+0xbfe86>
+  2c:	1f1f1e01 	svcne	0x001f1e01
+  30:	1f201f20 	svcne	0x00201f20
+  34:	0202201e 	andeq	r2, r2, #30
+  38:	Address 0x38 is out of bounds.
 
 
 Disassembly of section .debug_info:
@@ -65,7 +92,7 @@ Disassembly of section .debug_info:
    8:	01040000 	mrseq	r0, (UNDEF: 4)
    c:	00000000 	andeq	r0, r0, r0
   10:	00000198 	muleq	r0, r8, r1
-  14:	000001a2 	andeq	r0, r0, r2, lsr #3
+  14:	000001ae 	andeq	r0, r0, lr, lsr #3
   18:	00000000 	andeq	r0, r0, r0
   1c:	00000006 	andeq	r0, r0, r6
   20:	00000041 	andeq	r0, r0, r1, asr #32
@@ -77,7 +104,7 @@ Disassembly of section .debug_abbrev:
 00000000 <.debug_abbrev>:
    0:	10001101 	andne	r1, r0, r1, lsl #2
    4:	12011106 	andne	r1, r1, #-2147483647	@ 0x80000001
-   8:	1b0e0301 	blne	380c14 <reset_handler+0x380a7c>
+   8:	1b0e0301 	blne	380c14 <end+0x380a6a>
    c:	130e250e 	movwne	r2, #58638	@ 0xe50e
   10:	00000005 	andeq	r0, r0, r5
 
@@ -89,7 +116,7 @@ Disassembly of section .debug_aranges:
    8:	00040000 	andeq	r0, r4, r0
    c:	00000000 	andeq	r0, r0, r0
   10:	00000198 	muleq	r0, r8, r1
-  14:	0000000a 	andeq	r0, r0, sl
+  14:	00000016 	andeq	r0, r0, r6, lsl r0
 	...
 
 Disassembly of section .debug_str:
