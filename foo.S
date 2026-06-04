@@ -1,8 +1,9 @@
 #systick configuration registers
-.equ systick_csr, 0xE000E010
-.equ systick_rvr, 0xE000E014
-.equ systick_cvr, 0xE000E018
-.equ timeout,     0x00FFFFFF
+.equ systick_csr,   0xE000E010
+.equ systick_rvr,   0xE000E014
+.equ systick_cvr,   0xE000E018
+.equ systick_calib, 0xE000E01C
+.equ timeout,       0x00FFFFFF
 
 .section .vectors
 vector_table:

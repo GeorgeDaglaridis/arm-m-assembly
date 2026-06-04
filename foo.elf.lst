@@ -56,6 +56,7 @@ systick_handler:
 000001ea <break_here>:
 
 break_here:
+    bx lr
  1ea:	4770      	bx	lr
     ldr r0, =systick_csr
  1ec:	e000e010 	and	lr, r0, r0, lsl r0
@@ -91,7 +92,7 @@ Disassembly of section .debug_line:
   1c:	0000532e 	andeq	r5, r0, lr, lsr #6
   20:	00000000 	andeq	r0, r0, r0
   24:	01d00205 	bicseq	r0, r0, r5, lsl #4
-  28:	13030000 	movwne	r0, #12288	@ 0x3000
+  28:	14030000 	strne	r0, [r3], #-0
   2c:	1e1e2001 	cdpne	0, 1, cr2, cr14, cr1, {0}
   30:	1e1e2d1e 	mrcne	13, 0, r2, cr14, cr14, {0}
   34:	231f1e1e 	tstcs	pc, #480	@ 0x1e0
