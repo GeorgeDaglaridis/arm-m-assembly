@@ -15,18 +15,18 @@ Disassembly of section .banana:
 .section .text
 .align 1
 .type reset_handler, %function
-reset_handler:
+reset_handler: #set r8-r11 manualy set $r8=8
 
     mov r5, #0x0
  1d0:	2500      	movs	r5, #0
 
 #configuring systick
     ldr r0, =systick_csr
- 1d2:	4806      	ldr	r0, [pc, #24]	@ (1ec <break_here+0x2>)
+ 1d2:	4811      	ldr	r0, [pc, #68]	@ (218 <break_here+0x1c>)
     ldr r1, =systick_rvr
- 1d4:	4906      	ldr	r1, [pc, #24]	@ (1f0 <break_here+0x6>)
+ 1d4:	4911      	ldr	r1, [pc, #68]	@ (21c <break_here+0x20>)
     ldr r2, =systick_cvr
- 1d6:	4a07      	ldr	r2, [pc, #28]	@ (1f4 <break_here+0xa>)
+ 1d6:	4a12      	ldr	r2, [pc, #72]	@ (220 <break_here+0x24>)
     ldr r3, =timeout
  1d8:	f06f 437f 	mvn.w	r3, #4278190080	@ 0xff000000
 
@@ -45,25 +45,80 @@ reset_handler:
  1e6:	e7fe      	b.n	1e6 <reset_handler+0x16>
 
 000001e8 <systick_handler>:
-
 .section .text
 .align 1
 .type systick_handler, %function
 systick_handler:
+
     add r5, r5, #0x1
  1e8:	3501      	adds	r5, #1
 
-000001ea <break_here>:
+    mov r4, #0x4
+ 1ea:	2404      	movs	r4, #4
+    mov r6, #0x6
+ 1ec:	2606      	movs	r6, #6
+    mov r7, #0x7
+ 1ee:	2707      	movs	r7, #7
 
+    push {r4-r7}
+ 1f0:	b4f0      	push	{r4, r5, r6, r7}
+ 
+    mov r0, r8
+ 1f2:	4640      	mov	r0, r8
+    mov r1, r9
+ 1f4:	4649      	mov	r1, r9
+    mov r2, r10
+ 1f6:	4652      	mov	r2, sl
+    mov r3, r11
+ 1f8:	465b      	mov	r3, fp
+
+    push {r0-r3}
+ 1fa:	b40f      	push	{r0, r1, r2, r3}
+
+000001fc <break_here>:
+
+#reset r8-r11 manualy set $r8=0
 break_here:
+
+    mov r0, #0
+ 1fc:	2000      	movs	r0, #0
+    mov r1, #0
+ 1fe:	2100      	movs	r1, #0
+    mov r2, #0
+ 200:	2200      	movs	r2, #0
+    mov r3, #0
+ 202:	2300      	movs	r3, #0
+    mov r4, #0
+ 204:	2400      	movs	r4, #0
+    #mov r5, #0
+    mov r6, #0
+ 206:	2600      	movs	r6, #0
+    mov r7, #0
+ 208:	2700      	movs	r7, #0
+
+    pop {r0-r3}
+ 20a:	bc0f      	pop	{r0, r1, r2, r3}
+
+    mov r8,  r0
+ 20c:	4680      	mov	r8, r0
+    mov r9,  r1
+ 20e:	4689      	mov	r9, r1
+    mov r10, r2
+ 210:	4692      	mov	sl, r2
+    mov r11, r3
+ 212:	469b      	mov	fp, r3
+
+    pop {r4-r7}
+ 214:	bcf0      	pop	{r4, r5, r6, r7}
+
     bx lr
- 1ea:	4770      	bx	lr
+ 216:	4770      	bx	lr
     ldr r0, =systick_csr
- 1ec:	e000e010 	and	lr, r0, r0, lsl r0
+ 218:	e000e010 	and	lr, r0, r0, lsl r0
     ldr r1, =systick_rvr
- 1f0:	e000e014 	and	lr, r0, r4, lsl r0
+ 21c:	e000e014 	and	lr, r0, r4, lsl r0
     ldr r2, =systick_cvr
- 1f4:	e000e018 	and	lr, r0, r8, lsl r0
+ 220:	e000e018 	and	lr, r0, r8, lsl r0
 
 Disassembly of section .ARM.attributes:
 
@@ -82,7 +137,7 @@ Disassembly of section .ARM.attributes:
 Disassembly of section .debug_line:
 
 00000000 <.debug_line>:
-   0:	0000003f 	andeq	r0, r0, pc, lsr r0
+   0:	00000055 	andeq	r0, r0, r5, asr r0
    4:	00190002 	andseq	r0, r9, r2
    8:	01020000 	mrseq	r0, (UNDEF: 2)
    c:	000a0efb 	strdeq	r0, [sl], -fp
@@ -95,10 +150,16 @@ Disassembly of section .debug_line:
   28:	14030000 	strne	r0, [r3], #-0
   2c:	1e1e2001 	cdpne	0, 1, cr2, cr14, cr1, {0}
   30:	1e1e2d1e 	mrcne	13, 0, r2, cr14, cr14, {0}
-  34:	231f1e1e 	tstcs	pc, #480	@ 0x1e0
-  38:	1d6c0320 	stclne	3, cr0, [ip, #-128]!	@ 0xffffff80
-  3c:	02022c2c 	andeq	r2, r2, #44, 24	@ 0x2c00
-  40:	Address 0x40 is out of bounds.
+  34:	241f1e1e 	ldrcs	r1, [pc], #-3614	@ 3c <vector_table+0x3c>
+  38:	1f1e1e1f 	svcne	0x001e1e1f
+  3c:	1e1e1e1f 	mrcne	14, 0, r1, cr14, cr15, {0}
+  40:	1e1e221f 	mrcne	2, 0, r2, cr14, cr15, {0}
+  44:	1e1f1e1e 	mrcne	14, 0, r1, cr15, cr14, {0}
+  48:	1e1e1f1f 	mrcne	15, 0, r1, cr14, cr15, {0}
+  4c:	031f1f1e 	tsteq	pc, #30, 30	@ 0x78
+  50:	2c2c1d4a 	stccs	13, cr1, [ip], #-296	@ 0xfffffed8
+  54:	01000202 	tsteq	r0, r2, lsl #4
+  58:	Address 0x58 is out of bounds.
 
 
 Disassembly of section .debug_info:
@@ -109,7 +170,7 @@ Disassembly of section .debug_info:
    8:	01040000 	mrseq	r0, (UNDEF: 4)
    c:	00000000 	andeq	r0, r0, r0
   10:	000001d0 	ldrdeq	r0, [r0], -r0	@ <UNPREDICTABLE>
-  14:	000001f8 	strdeq	r0, [r0], -r8
+  14:	00000224 	andeq	r0, r0, r4, lsr #4
   18:	00000000 	andeq	r0, r0, r0
   1c:	00000006 	andeq	r0, r0, r6
   20:	00000041 	andeq	r0, r0, r1, asr #32
@@ -121,7 +182,7 @@ Disassembly of section .debug_abbrev:
 00000000 <.debug_abbrev>:
    0:	10001101 	andne	r1, r0, r1, lsl #2
    4:	12011106 	andne	r1, r1, #-2147483647	@ 0x80000001
-   8:	1b0e0301 	blne	380c14 <break_here+0x380a2a>
+   8:	1b0e0301 	blne	380c14 <break_here+0x380a18>
    c:	130e250e 	movwne	r2, #58638	@ 0xe50e
   10:	00000005 	andeq	r0, r0, r5
 
@@ -133,7 +194,7 @@ Disassembly of section .debug_aranges:
    8:	00040000 	andeq	r0, r4, r0
    c:	00000000 	andeq	r0, r0, r0
   10:	000001d0 	ldrdeq	r0, [r0], -r0	@ <UNPREDICTABLE>
-  14:	00000028 	andeq	r0, r0, r8, lsr #32
+  14:	00000054 	andeq	r0, r0, r4, asr r0
 	...
 
 Disassembly of section .debug_str:
