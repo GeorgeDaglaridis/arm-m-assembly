@@ -91,7 +91,7 @@ main3:
     add r2, r2, #0x3
     b main3
 
-    .zero 100
+    .data
     .align 4
 stack_1:
     .word 0x18

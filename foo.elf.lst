@@ -22,11 +22,11 @@ reset_handler: #set r8-r11 manualy set $r8=8
 
 #configuring systick
     ldr r0, =systick_csr
- 1d2:	489c      	ldr	r0, [pc, #624]	@ (444 <stack_3+0xa4>)
+ 1d2:	4819      	ldr	r0, [pc, #100]	@ (238 <main3+0x8>)
     ldr r1, =systick_rvr
- 1d4:	499c      	ldr	r1, [pc, #624]	@ (448 <stack_3+0xa8>)
+ 1d4:	4919      	ldr	r1, [pc, #100]	@ (23c <main3+0xc>)
     ldr r2, =systick_cvr
- 1d6:	4a9d      	ldr	r2, [pc, #628]	@ (44c <stack_3+0xac>)
+ 1d6:	4a1a      	ldr	r2, [pc, #104]	@ (240 <main3+0x10>)
     ldr r3, =timeout
  1d8:	f06f 437f 	mvn.w	r3, #4278190080	@ 0xff000000
 
@@ -136,72 +136,73 @@ main3:
  232:	3203      	adds	r2, #3
     b main3
  234:	e7fc      	b.n	230 <main3>
-	...
- 29a:	bf00      	nop
- 29c:	f3af 8000 	nop.w
-
-000002a0 <stack_1>:
- 2a0:	00000018 	andeq	r0, r0, r8, lsl r0
- 2a4:	00000019 	andeq	r0, r0, r9, lsl r0
- 2a8:	0000001a 	andeq	r0, r0, sl, lsl r0
- 2ac:	0000001b 	andeq	r0, r0, fp, lsl r0
- 2b0:	00000014 	andeq	r0, r0, r4, lsl r0
- 2b4:	00000015 	andeq	r0, r0, r5, lsl r0
- 2b8:	00000016 	andeq	r0, r0, r6, lsl r0
- 2bc:	00000017 	andeq	r0, r0, r7, lsl r0
- 2c0:	00000010 	andeq	r0, r0, r0, lsl r0
- 2c4:	00000011 	andeq	r0, r0, r1, lsl r0
- 2c8:	00000012 	andeq	r0, r0, r2, lsl r0
- 2cc:	00000013 	andeq	r0, r0, r3, lsl r0
- 2d0:	0000001c 	andeq	r0, r0, ip, lsl r0
- 2d4:	00000309 	andeq	r0, r0, r9, lsl #6
- 2d8:	00000211 	andeq	r0, r0, r1, lsl r2
- 2dc:	01000000 	mrseq	r0, (UNDEF: 0)
-	...
-
-00000320 <stack_2>:
- 320:	00000028 	andeq	r0, r0, r8, lsr #32
- 324:	00000029 	andeq	r0, r0, r9, lsr #32
- 328:	0000002a 	andeq	r0, r0, sl, lsr #32
- 32c:	0000002b 	andeq	r0, r0, fp, lsr #32
- 330:	00000024 	andeq	r0, r0, r4, lsr #32
- 334:	00000025 	andeq	r0, r0, r5, lsr #32
- 338:	00000026 	andeq	r0, r0, r6, lsr #32
- 33c:	00000027 	andeq	r0, r0, r7, lsr #32
- 340:	00000020 	andeq	r0, r0, r0, lsr #32
- 344:	00000021 	andeq	r0, r0, r1, lsr #32
- 348:	00000022 	andeq	r0, r0, r2, lsr #32
- 34c:	00000023 	andeq	r0, r0, r3, lsr #32
- 350:	0000002c 	andeq	r0, r0, ip, lsr #32
- 354:	00000309 	andeq	r0, r0, r9, lsl #6
- 358:	00000221 	andeq	r0, r0, r1, lsr #4
- 35c:	01000000 	mrseq	r0, (UNDEF: 0)
-	...
-
-000003a0 <stack_3>:
- 3a0:	00000038 	andeq	r0, r0, r8, lsr r0
- 3a4:	00000039 	andeq	r0, r0, r9, lsr r0
- 3a8:	0000003a 	andeq	r0, r0, sl, lsr r0
- 3ac:	0000003b 	andeq	r0, r0, fp, lsr r0
- 3b0:	00000034 	andeq	r0, r0, r4, lsr r0
- 3b4:	00000035 	andeq	r0, r0, r5, lsr r0
- 3b8:	00000036 	andeq	r0, r0, r6, lsr r0
- 3bc:	00000037 	andeq	r0, r0, r7, lsr r0
- 3c0:	00000030 	andeq	r0, r0, r0, lsr r0
- 3c4:	00000031 	andeq	r0, r0, r1, lsr r0
- 3c8:	00000032 	andeq	r0, r0, r2, lsr r0
- 3cc:	00000033 	andeq	r0, r0, r3, lsr r0
- 3d0:	0000003c 	andeq	r0, r0, ip, lsr r0
- 3d4:	00000309 	andeq	r0, r0, r9, lsl #6
- 3d8:	00000231 	andeq	r0, r0, r1, lsr r2
- 3dc:	01000000 	mrseq	r0, (UNDEF: 0)
-	...
+ 236:	e0100000 	ands	r0, r0, r0
     ldr r0, =systick_csr
- 444:	e000e010 	and	lr, r0, r0, lsl r0
+ 23a:	e014e000 	ands	lr, r4, r0
     ldr r1, =systick_rvr
- 448:	e000e014 	and	lr, r0, r4, lsl r0
+ 23e:	e018e000 	ands	lr, r8, r0
     ldr r2, =systick_cvr
- 44c:	e000e018 	and	lr, r0, r8, lsl r0
+ 242:	Address 0x242 is out of bounds.
+
+
+Disassembly of section .data:
+
+20000000 <stack_1>:
+20000000:	00000018 	andeq	r0, r0, r8, lsl r0
+20000004:	00000019 	andeq	r0, r0, r9, lsl r0
+20000008:	0000001a 	andeq	r0, r0, sl, lsl r0
+2000000c:	0000001b 	andeq	r0, r0, fp, lsl r0
+20000010:	00000014 	andeq	r0, r0, r4, lsl r0
+20000014:	00000015 	andeq	r0, r0, r5, lsl r0
+20000018:	00000016 	andeq	r0, r0, r6, lsl r0
+2000001c:	00000017 	andeq	r0, r0, r7, lsl r0
+20000020:	00000010 	andeq	r0, r0, r0, lsl r0
+20000024:	00000011 	andeq	r0, r0, r1, lsl r0
+20000028:	00000012 	andeq	r0, r0, r2, lsl r0
+2000002c:	00000013 	andeq	r0, r0, r3, lsl r0
+20000030:	0000001c 	andeq	r0, r0, ip, lsl r0
+20000034:	00000309 	andeq	r0, r0, r9, lsl #6
+20000038:	00000211 	andeq	r0, r0, r1, lsl r2
+2000003c:	01000000 	mrseq	r0, (UNDEF: 0)
+	...
+
+20000080 <stack_2>:
+20000080:	00000028 	andeq	r0, r0, r8, lsr #32
+20000084:	00000029 	andeq	r0, r0, r9, lsr #32
+20000088:	0000002a 	andeq	r0, r0, sl, lsr #32
+2000008c:	0000002b 	andeq	r0, r0, fp, lsr #32
+20000090:	00000024 	andeq	r0, r0, r4, lsr #32
+20000094:	00000025 	andeq	r0, r0, r5, lsr #32
+20000098:	00000026 	andeq	r0, r0, r6, lsr #32
+2000009c:	00000027 	andeq	r0, r0, r7, lsr #32
+200000a0:	00000020 	andeq	r0, r0, r0, lsr #32
+200000a4:	00000021 	andeq	r0, r0, r1, lsr #32
+200000a8:	00000022 	andeq	r0, r0, r2, lsr #32
+200000ac:	00000023 	andeq	r0, r0, r3, lsr #32
+200000b0:	0000002c 	andeq	r0, r0, ip, lsr #32
+200000b4:	00000309 	andeq	r0, r0, r9, lsl #6
+200000b8:	00000221 	andeq	r0, r0, r1, lsr #4
+200000bc:	01000000 	mrseq	r0, (UNDEF: 0)
+	...
+
+20000100 <stack_3>:
+20000100:	00000038 	andeq	r0, r0, r8, lsr r0
+20000104:	00000039 	andeq	r0, r0, r9, lsr r0
+20000108:	0000003a 	andeq	r0, r0, sl, lsr r0
+2000010c:	0000003b 	andeq	r0, r0, fp, lsr r0
+20000110:	00000034 	andeq	r0, r0, r4, lsr r0
+20000114:	00000035 	andeq	r0, r0, r5, lsr r0
+20000118:	00000036 	andeq	r0, r0, r6, lsr r0
+2000011c:	00000037 	andeq	r0, r0, r7, lsr r0
+20000120:	00000030 	andeq	r0, r0, r0, lsr r0
+20000124:	00000031 	andeq	r0, r0, r1, lsr r0
+20000128:	00000032 	andeq	r0, r0, r2, lsr r0
+2000012c:	00000033 	andeq	r0, r0, r3, lsr r0
+20000130:	0000003c 	andeq	r0, r0, ip, lsr r0
+20000134:	00000309 	andeq	r0, r0, r9, lsl #6
+20000138:	00000231 	andeq	r0, r0, r1, lsr r2
+2000013c:	01000000 	mrseq	r0, (UNDEF: 0)
+	...
 
 Disassembly of section .ARM.attributes:
 
@@ -220,7 +221,7 @@ Disassembly of section .ARM.attributes:
 Disassembly of section .debug_line:
 
 00000000 <.debug_line>:
-   0:	00000059 	andeq	r0, r0, r9, asr r0
+   0:	00000056 	andeq	r0, r0, r6, asr r0
    4:	00190002 	andseq	r0, r9, r2
    8:	01020000 	mrseq	r0, (UNDEF: 2)
    c:	000a0efb 	strdeq	r0, [sl], -fp
@@ -240,10 +241,9 @@ Disassembly of section .debug_line:
   44:	1e7f0903 	vaddne.f16	s1, s30, s6	@ <UNPREDICTABLE>
   48:	1e1e6a1e 			@ <UNDEFINED> instruction: 0x1e1e6a1e
   4c:	031e1e6a 	tsteq	lr, #1696	@ 0x6a0
-  50:	88027fbc 	stmdahi	r2, {r2, r3, r4, r5, r7, r8, r9, sl, fp, ip, sp, lr}
-  54:	2c2c0102 	stfcss	f0, [ip], #-8
-  58:	01000202 	tsteq	r0, r2, lsl #4
-  5c:	Address 0x5c is out of bounds.
+  50:	2c2b7fbc 	stccs	15, cr7, [fp], #-752	@ 0xfffffd10
+  54:	0002022c 	andeq	r0, r2, ip, lsr #4
+  58:	Address 0x58 is out of bounds.
 
 
 Disassembly of section .debug_info:
@@ -254,7 +254,7 @@ Disassembly of section .debug_info:
    8:	01040000 	mrseq	r0, (UNDEF: 4)
    c:	00000000 	andeq	r0, r0, r0
   10:	000001d0 	ldrdeq	r0, [r0], -r0	@ <UNPREDICTABLE>
-  14:	00000450 	andeq	r0, r0, r0, asr r4
+  14:	00000244 	andeq	r0, r0, r4, asr #4
   18:	00000000 	andeq	r0, r0, r0
   1c:	00000006 	andeq	r0, r0, r6
   20:	00000041 	andeq	r0, r0, r1, asr #32
@@ -266,7 +266,7 @@ Disassembly of section .debug_abbrev:
 00000000 <.debug_abbrev>:
    0:	10001101 	andne	r1, r0, r1, lsl #2
    4:	12011106 	andne	r1, r1, #-2147483647	@ 0x80000001
-   8:	1b0e0301 	blne	380c14 <stack_3+0x380874>
+   8:	1b0e0301 	blne	380c14 <main3+0x3809e4>
    c:	130e250e 	movwne	r2, #58638	@ 0xe50e
   10:	00000005 	andeq	r0, r0, r5
 
@@ -278,7 +278,7 @@ Disassembly of section .debug_aranges:
    8:	00040000 	andeq	r0, r4, r0
    c:	00000000 	andeq	r0, r0, r0
   10:	000001d0 	ldrdeq	r0, [r0], -r0	@ <UNPREDICTABLE>
-  14:	00000280 	andeq	r0, r0, r0, lsl #5
+  14:	00000074 	andeq	r0, r0, r4, ror r0
 	...
 
 Disassembly of section .debug_str:
