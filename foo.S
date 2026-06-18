@@ -4,6 +4,9 @@
 .equ systick_cvr,   0xE000E018
 .equ systick_calib, 0xE000E01C
 .equ timeout,       0x00FFFFFF
+.equ stack_1,       0x20000000
+.equ stack_2,       0x20000080
+.equ stack_3,       0x20000100
 
 .section .vectors
 vector_table:
@@ -48,6 +51,20 @@ systick_handler:
 
     push {r0-r3}
 
+    cmp r0, #0x0
+    beq stack1
+
+    cmp r0, #0x18
+    beq stack2
+
+    cmp r0, #0x28
+    beq stack3
+
+    cmp r0, #0x38
+    beq stack1
+
+    b break_here
+
 #reset r8-r11 manualy set $r8=0
 break_here:
 
@@ -61,6 +78,22 @@ break_here:
     pop {r4-r7}
 
     bx lr
+
+stack1:
+    ldr r0, =stack_1
+    mov sp, r0
+    b break_here
+
+stack2:
+    ldr r0, =stack_2
+    mov sp, r0
+    b break_here
+
+stack3:
+    ldr r0, =stack_3
+    mov sp, r0
+    b break_here
+
 
 #Tasks
 

@@ -22,11 +22,11 @@ reset_handler: #set r8-r11 manualy set $r8=8
 
 #configuring systick
     ldr r0, =systick_csr
- 1d2:	4819      	ldr	r0, [pc, #100]	@ (238 <main3+0x8>)
+ 1d2:	4821      	ldr	r0, [pc, #132]	@ (258 <main3+0x8>)
     ldr r1, =systick_rvr
- 1d4:	4919      	ldr	r1, [pc, #100]	@ (23c <main3+0xc>)
+ 1d4:	4921      	ldr	r1, [pc, #132]	@ (25c <main3+0xc>)
     ldr r2, =systick_cvr
- 1d6:	4a1a      	ldr	r2, [pc, #104]	@ (240 <main3+0x10>)
+ 1d6:	4a22      	ldr	r2, [pc, #136]	@ (260 <main3+0x10>)
     ldr r3, =timeout
  1d8:	f06f 437f 	mvn.w	r3, #4278190080	@ 0xff000000
 
@@ -65,84 +65,139 @@ systick_handler:
     push {r0-r3}
  1f2:	b40f      	push	{r0, r1, r2, r3}
 
-000001f4 <break_here>:
+    cmp r0, #0x0
+ 1f4:	2800      	cmp	r0, #0
+    beq stack1
+ 1f6:	d00d      	beq.n	214 <stack1>
+
+    cmp r0, #0x18
+ 1f8:	2818      	cmp	r0, #24
+    beq stack2
+ 1fa:	d00f      	beq.n	21c <stack2>
+
+    cmp r0, #0x28
+ 1fc:	2828      	cmp	r0, #40	@ 0x28
+    beq stack3
+ 1fe:	d010      	beq.n	222 <stack3>
+
+    cmp r0, #0x38
+ 200:	2838      	cmp	r0, #56	@ 0x38
+    beq stack1
+ 202:	d007      	beq.n	214 <stack1>
+
+    b break_here
+ 204:	e7ff      	b.n	206 <break_here>
+
+00000206 <break_here>:
 
 #reset r8-r11 manualy set $r8=0
 break_here:
 
     pop {r0-r3}
- 1f4:	bc0f      	pop	{r0, r1, r2, r3}
+ 206:	bc0f      	pop	{r0, r1, r2, r3}
 
     mov r8,  r0
- 1f6:	4680      	mov	r8, r0
+ 208:	4680      	mov	r8, r0
     mov r9,  r1
- 1f8:	4689      	mov	r9, r1
+ 20a:	4689      	mov	r9, r1
     mov r10, r2
- 1fa:	4692      	mov	sl, r2
+ 20c:	4692      	mov	sl, r2
     mov r11, r3
- 1fc:	469b      	mov	fp, r3
+ 20e:	469b      	mov	fp, r3
 
     pop {r4-r7}
- 1fe:	bcf0      	pop	{r4, r5, r6, r7}
+ 210:	bcf0      	pop	{r4, r5, r6, r7}
 
     bx lr
- 200:	4770      	bx	lr
- 202:	bf00      	nop
- 204:	f3af 8000 	nop.w
- 208:	f3af 8000 	nop.w
- 20c:	f3af 8000 	nop.w
+ 212:	4770      	bx	lr
 
-00000210 <main1>:
+00000214 <stack1>:
+
+stack1:
+    ldr r0, =stack_1
+ 214:	f04f 5000 	mov.w	r0, #536870912	@ 0x20000000
+    mov sp, r0
+ 218:	4685      	mov	sp, r0
+    b break_here
+ 21a:	e7f4      	b.n	206 <break_here>
+
+0000021c <stack2>:
+
+stack2:
+    ldr r0, =stack_2
+ 21c:	4811      	ldr	r0, [pc, #68]	@ (264 <main3+0x14>)
+    mov sp, r0
+ 21e:	4685      	mov	sp, r0
+    b break_here
+ 220:	e7f1      	b.n	206 <break_here>
+
+00000222 <stack3>:
+
+stack3:
+    ldr r0, =stack_3
+ 222:	4811      	ldr	r0, [pc, #68]	@ (268 <main3+0x18>)
+    mov sp, r0
+ 224:	4685      	mov	sp, r0
+    b break_here
+ 226:	e7ee      	b.n	206 <break_here>
+ 228:	f3af 8000 	nop.w
+ 22c:	f3af 8000 	nop.w
+
+00000230 <main1>:
     .section .text
     .p2align 4
     .globl main1
     .type main1, %function
 main1:
     nop
- 210:	46c0      	nop			@ (mov r8, r8)
+ 230:	46c0      	nop			@ (mov r8, r8)
     add r0, r0, #0x1
- 212:	3001      	adds	r0, #1
+ 232:	3001      	adds	r0, #1
     b main1
- 214:	e7fc      	b.n	210 <main1>
- 216:	bf00      	nop
- 218:	f3af 8000 	nop.w
- 21c:	f3af 8000 	nop.w
+ 234:	e7fc      	b.n	230 <main1>
+ 236:	bf00      	nop
+ 238:	f3af 8000 	nop.w
+ 23c:	f3af 8000 	nop.w
 
-00000220 <main2>:
+00000240 <main2>:
     .section .text
     .p2align 4
     .globl main2
     .type main2, %function
 main2:
     nop
- 220:	46c0      	nop			@ (mov r8, r8)
+ 240:	46c0      	nop			@ (mov r8, r8)
     add r1, r1, #0x2
- 222:	3102      	adds	r1, #2
+ 242:	3102      	adds	r1, #2
     b main2
- 224:	e7fc      	b.n	220 <main2>
- 226:	bf00      	nop
- 228:	f3af 8000 	nop.w
- 22c:	f3af 8000 	nop.w
+ 244:	e7fc      	b.n	240 <main2>
+ 246:	bf00      	nop
+ 248:	f3af 8000 	nop.w
+ 24c:	f3af 8000 	nop.w
 
-00000230 <main3>:
+00000250 <main3>:
     .section .text
     .p2align 4
     .globl main3
     .type main3, %function
 main3:
     nop
- 230:	46c0      	nop			@ (mov r8, r8)
+ 250:	46c0      	nop			@ (mov r8, r8)
     add r2, r2, #0x3
- 232:	3203      	adds	r2, #3
+ 252:	3203      	adds	r2, #3
     b main3
- 234:	e7fc      	b.n	230 <main3>
- 236:	e0100000 	ands	r0, r0, r0
+ 254:	e7fc      	b.n	250 <main3>
+ 256:	e0100000 	ands	r0, r0, r0
     ldr r0, =systick_csr
- 23a:	e014e000 	ands	lr, r4, r0
+ 25a:	e014e000 	ands	lr, r4, r0
     ldr r1, =systick_rvr
- 23e:	e018e000 	ands	lr, r8, r0
+ 25e:	e018e000 	ands	lr, r8, r0
     ldr r2, =systick_cvr
- 242:	Address 0x242 is out of bounds.
+ 262:	0080e000 	addeq	lr, r0, r0
+    ldr r0, =stack_2
+ 266:	01002000 	mrseq	r2, (UNDEF: 0)
+    ldr r0, =stack_3
+ 26a:	Address 0x26a is out of bounds.
 
 
 Disassembly of section .data:
@@ -162,7 +217,7 @@ Disassembly of section .data:
 2000002c:	00000013 	andeq	r0, r0, r3, lsl r0
 20000030:	0000001c 	andeq	r0, r0, ip, lsl r0
 20000034:	00000309 	andeq	r0, r0, r9, lsl #6
-20000038:	00000211 	andeq	r0, r0, r1, lsl r2
+20000038:	00000231 	andeq	r0, r0, r1, lsr r2
 2000003c:	01000000 	mrseq	r0, (UNDEF: 0)
 	...
 
@@ -181,7 +236,7 @@ Disassembly of section .data:
 200000ac:	00000023 	andeq	r0, r0, r3, lsr #32
 200000b0:	0000002c 	andeq	r0, r0, ip, lsr #32
 200000b4:	00000309 	andeq	r0, r0, r9, lsl #6
-200000b8:	00000221 	andeq	r0, r0, r1, lsr #4
+200000b8:	00000241 	andeq	r0, r0, r1, asr #4
 200000bc:	01000000 	mrseq	r0, (UNDEF: 0)
 	...
 
@@ -200,7 +255,7 @@ Disassembly of section .data:
 2000012c:	00000033 	andeq	r0, r0, r3, lsr r0
 20000130:	0000003c 	andeq	r0, r0, ip, lsr r0
 20000134:	00000309 	andeq	r0, r0, r9, lsl #6
-20000138:	00000231 	andeq	r0, r0, r1, lsr r2
+20000138:	00000251 	andeq	r0, r0, r1, asr r2
 2000013c:	01000000 	mrseq	r0, (UNDEF: 0)
 	...
 
@@ -221,7 +276,7 @@ Disassembly of section .ARM.attributes:
 Disassembly of section .debug_line:
 
 00000000 <.debug_line>:
-   0:	00000056 	andeq	r0, r0, r6, asr r0
+   0:	0000006c 	andeq	r0, r0, ip, rrx
    4:	00190002 	andseq	r0, r9, r2
    8:	01020000 	mrseq	r0, (UNDEF: 2)
    c:	000a0efb 	strdeq	r0, [sl], -fp
@@ -231,20 +286,24 @@ Disassembly of section .debug_line:
   1c:	0000532e 	andeq	r5, r0, lr, lsr #6
   20:	00000000 	andeq	r0, r0, r0
   24:	01d00205 	bicseq	r0, r0, r5, lsl #4
-  28:	14030000 	strne	r0, [r3], #-0
+  28:	17030000 	strne	r0, [r3, -r0]
   2c:	1e1e2001 	cdpne	0, 1, cr2, cr14, cr1, {0}
   30:	1e1e2d1e 	mrcne	13, 0, r2, cr14, cr14, {0}
   34:	241f1e1e 	ldrcs	r1, [pc], #-3614	@ 3c <vector_table+0x3c>
   38:	1e1e1e1f 	mrcne	14, 0, r1, cr14, cr15, {0}
-  3c:	1e1f221f 	mrcne	2, 0, r2, cr15, cr15, {0}
-  40:	1f1f1e1e 	svcne	0x001f1e1e
-  44:	1e7f0903 	vaddne.f16	s1, s30, s6	@ <UNPREDICTABLE>
-  48:	1e1e6a1e 			@ <UNDEFINED> instruction: 0x1e1e6a1e
-  4c:	031e1e6a 	tsteq	lr, #1696	@ 0x6a0
-  50:	2c2b7fbc 	stccs	15, cr7, [fp], #-752	@ 0xfffffd10
-  54:	0002022c 	andeq	r0, r2, ip, lsr #4
-  58:	Address 0x58 is out of bounds.
-
+  3c:	1f1e1f1f 	svcne	0x001e1f1f
+  40:	1f1e1f1e 	svcne	0x001e1f1e
+  44:	1f221f1e 	svcne	0x00221f1e
+  48:	1f1e1e1e 	svcne	0x001e1e1e
+  4c:	1e2c201f 	miaBBne	acc0, pc, r2
+  50:	201e1e20 	andscs	r1, lr, r0, lsr #28
+  54:	0a031e1e 	beq	c78d4 <main3+0xc7684>
+  58:	6a1e1e55 	bvs	7879b4 <main3+0x787764>
+  5c:	1e6a1e1e 	mcrne	14, 3, r1, cr10, cr14, {0}
+  60:	7f9e031e 	svcvc	0x009e031e
+  64:	032c2c2b 			@ <UNDEFINED> instruction: 0x032c2c2b
+  68:	02302b3b 	eorseq	r2, r0, #60416	@ 0xec00
+  6c:	01010002 	tsteq	r1, r2
 
 Disassembly of section .debug_info:
 
@@ -254,7 +313,7 @@ Disassembly of section .debug_info:
    8:	01040000 	mrseq	r0, (UNDEF: 4)
    c:	00000000 	andeq	r0, r0, r0
   10:	000001d0 	ldrdeq	r0, [r0], -r0	@ <UNPREDICTABLE>
-  14:	00000244 	andeq	r0, r0, r4, asr #4
+  14:	0000026c 	andeq	r0, r0, ip, ror #4
   18:	00000000 	andeq	r0, r0, r0
   1c:	00000006 	andeq	r0, r0, r6
   20:	00000041 	andeq	r0, r0, r1, asr #32
@@ -266,7 +325,7 @@ Disassembly of section .debug_abbrev:
 00000000 <.debug_abbrev>:
    0:	10001101 	andne	r1, r0, r1, lsl #2
    4:	12011106 	andne	r1, r1, #-2147483647	@ 0x80000001
-   8:	1b0e0301 	blne	380c14 <main3+0x3809e4>
+   8:	1b0e0301 	blne	380c14 <main3+0x3809c4>
    c:	130e250e 	movwne	r2, #58638	@ 0xe50e
   10:	00000005 	andeq	r0, r0, r5
 
@@ -278,7 +337,7 @@ Disassembly of section .debug_aranges:
    8:	00040000 	andeq	r0, r4, r0
    c:	00000000 	andeq	r0, r0, r0
   10:	000001d0 	ldrdeq	r0, [r0], -r0	@ <UNPREDICTABLE>
-  14:	00000074 	andeq	r0, r0, r4, ror r0
+  14:	0000009c 	muleq	r0, ip, r0
 	...
 
 Disassembly of section .debug_str:
