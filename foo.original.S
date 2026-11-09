@@ -51,6 +51,9 @@ systick_handler:
 #reset r8-r11 manualy set $r8=0
 break_here:
 
+    ldr r0, =stack_1
+    mov sp, r0
+
     pop {r0-r3}
 
     mov r8,  r0
@@ -59,6 +62,19 @@ break_here:
     mov r11, r3
 
     pop {r4-r7}
+
+    //MSR PSP, r0
+    //MOVS r0, #3
+    //MSR CONTROL, r0
+    //ISB
+
+    //ldr r0, =#0xfffffffd
+    //mov lr, r0
+    //mov r0, #0x0
+
+    //mov r0, sp
+    //MSR PSP, r0
+    //mov r0, #0x0
 
     bx lr
 
